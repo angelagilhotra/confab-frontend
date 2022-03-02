@@ -57,8 +57,8 @@ export type ServerEvent = {
   startDateTime: string
   endDateTime: string
   hash?: string
-  limit: number
-  typeId: number
+  limit?: number
+  typeId?: number
   postOnSlack?: boolean
   slackChannel?: string
   createGcalEvent?: boolean

@@ -1,4 +1,4 @@
-import {useRouter} from 'next/router';
+import router, {useRouter} from 'next/router';
 import Main from 'layouts/Main';
 import {Formik} from 'formik';
 import {useQuery} from 'react-query';
@@ -26,11 +26,14 @@ const Post = () => {
     descriptionHtml: '',
     location: ''
   });
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const {isLoading, isError, data, isFetching} = useQuery(
     `edit_${eventHash}`,
     async () => {
       const r = (await (await fetch('/api/getEvent', {
-        body: JSON.stringify({event: eventHash}),
+        body: JSON.stringify({
+          event: eventHash
+        }),
         method: 'POST',
         headers: {'Content-type': 'application/json'},
       })).json()).data;
@@ -59,11 +62,30 @@ const Post = () => {
       //      .required('Required'),
       //    email: Yup.string().email('Invalid email address').required('Required'),
       //  })}
-       onSubmit={(values, { setSubmitting }) => {
-         setTimeout(() => {
-           alert(JSON.stringify(values, null, 2));
-           setSubmitting(false);
-         }, 400);
+       onSubmit={async (values, { setSubmitting }) => {
+        setSubmitting(true);
+        try {
+          await (await fetch('/api/updateEvents', {
+            body: JSON.stringify({
+              ts,
+              magic,
+              hash: eventHash,
+              data: {
+                ...values,
+                allSessions: data?.sessions
+              }
+            }),
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' }
+          })).json()
+          setSubmitting(false);
+          router.push({
+            pathname: `/rsvp/${eventHash}`
+          })
+        } catch (err: any) {
+          setErrorMessage("There was an error");
+          console.log(err);
+        }
        }}
        enableReinitialize={true}
      >
@@ -115,25 +137,41 @@ const Post = () => {
               {data?.sessions && <EditSessions sessions={data?.sessions} />}
             </div>
           </div>
-         <button
-          className={`
-            bg-kernel
-            text-gray-200
-            hover:shadow-outline
-            font-secondary
-            py-2
-            px-16
-            rounded-lg
-            text-lg
-            uppercase
-            transition-shadow
-            duration-300
-            ease-in-out
-          `}
-          type="submit"
-        >
-          Submit
-        </button>
+         {!errorMessage ?
+            <button
+              className={`
+                font-secondary
+                py-2
+                px-16
+                rounded-lg
+                text-lg
+                uppercase
+                transition-shadow
+                duration-300
+                ease-in-out
+                ${formik.isSubmitting ? `
+                  bg-gray-400
+                  text-gray-600
+                  cursor-not-allowed` :
+                  `
+                  bg-kernel
+                  text-gray-200
+                  hover:shadow-outline
+                  `}
+              `}
+              type="submit"
+            >
+               <div className="flex flex-row items-center justify-center gap-4">
+                {formik.isSubmitting ?(<span className="bg-highlight rounded-full h-2 w-2 animate-ping">
+                </span>):<></>}
+                <div>
+                  Submit
+                </div>
+              </div>
+            </button>
+            :
+            <div>{errorMessage}</div>
+          }
       </form>
       )
      }

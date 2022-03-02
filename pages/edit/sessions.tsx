@@ -5,7 +5,7 @@ import { isPast, getDateTimeString } from 'utils';
 import { DateTime } from "luxon";
 
 export const EditSessions = ({sessions}: {sessions: ClientSession[]}) => {
-  const [sortedSessions, setSortedSessions]=useState<ClientSession[]>(sessions);
+  const [sortedSessions, setSortedSessions] = useState<ClientSession[]>(sessions);
   useEffect(() => {
     const activeSessions:ClientSession[] = [];
     const inactiveSessions:ClientSession[] = [];
@@ -37,18 +37,18 @@ export const EditSessions = ({sessions}: {sessions: ClientSession[]}) => {
           } else {
             element =
             <div key={session.id} className="pb-4">
-            <DatePickerField
-              name={ `${session.id}start` }
-              value={
-                DateTime.fromISO(session.startDateTime!).toJSDate()
-              }
-            />
-            <DatePickerField
-              name={ `${session.id}end` }
-              value={
-                DateTime.fromISO(session.endDateTime!).toJSDate()
-              }
-            />
+              <DatePickerField
+                name={ `date-start-${session.id}` }
+                value={
+                  DateTime.fromISO(session.startDateTime!).toJSDate()
+                }
+              />
+              <DatePickerField
+                name={ `date-end-${session.id}` }
+                value={
+                  DateTime.fromISO(session.endDateTime!).toJSDate()
+                }
+              />
             </div>
           }
           return element;
