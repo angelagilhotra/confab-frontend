@@ -13,6 +13,22 @@ const EventPage = ({
   const router = useRouter();
   const url = router.asPath;
 
+  const editHandler = () => {
+    const eventHash = router.query.eventHash;
+    const opts = {
+      method: 'POST',
+      headers: {'Content-type': 'application/json'},
+      body: JSON.stringify({ eventHash })};
+    fetch('/api/triggerMagicLink', opts)
+      .then((data) => data.json())
+      .then((json) => {
+        if (json) {
+          alert('You have found the magic edit feature.' +
+            'If you are the owner of this event, please check your email inbox.')
+        }
+      }).catch((error) => console.log(error));
+  }
+
   return (
     <>
       <NextSeo
@@ -41,7 +57,7 @@ const EventPage = ({
           <Article
             html={event.description}
           />
-          <div className='font-fancy md:text-5xl text-4xl text-kernel pt-24'>
+          <div onDoubleClick={editHandler} className='font-fancy md:text-5xl text-4xl text-kernel pt-24'>
             {event.proposerName}
           </div>
         </div>
