@@ -3,8 +3,8 @@ import Main from 'layouts/Main';
 import {Formik} from 'formik';
 import {useQuery} from 'react-query';
 import { useEffect, useState } from 'react';
-import {RichTextArea} from "./eventDescription";
-import {EditSessions} from "./sessions";
+import {RichTextArea} from "components/edit/eventDescription";
+import {EditSessions} from "components/edit/sessions";
 
 type formTypes = {
   title: string,

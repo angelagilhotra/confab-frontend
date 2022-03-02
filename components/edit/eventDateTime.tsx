@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 export const DatePickerField = ({ ...props }) => {
   const [startDate, setStartDate] = useState(props.value ?? new Date());
   const { setFieldValue } = useFormikContext();
+  // @ts-ignore
   const [field] = useField(props);
   return (
     <>
