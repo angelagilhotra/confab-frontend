@@ -159,6 +159,7 @@ const Post = () => {
                 font-secondary
                 py-2
                 px-16
+                mt-4
                 rounded-lg
                 text-lg
                 uppercase
@@ -178,7 +179,8 @@ const Post = () => {
               type="submit"
             >
                <div className="flex flex-row items-center justify-center gap-4">
-                {formik.isSubmitting ?(<span className="bg-highlight rounded-full h-2 w-2 animate-ping">
+                {formik.isSubmitting ?(
+                <span className="bg-highlight rounded-full h-2 w-2 animate-ping">
                 </span>):<></>}
                 <div>
                   Submit
