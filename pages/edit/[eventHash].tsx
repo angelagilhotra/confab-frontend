@@ -129,6 +129,7 @@ const Post = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 mt-24 gap-12">
             <div className='col-span-2'>
               <div className='pb-2'>
+                <div className='flex flex-row items-center'>
                 <label htmlFor="location" className='mr-2 font-secondary text-gray-800 uppercase text-base'>
                   Location
                 </label>
@@ -139,9 +140,10 @@ const Post = () => {
                   className={`
                     ring-gray-300 border-gray-300
                     focus:border-primary focus:ring-primary
-                    rounded-lg
+                    rounded-lg w-full
                   `}
                 />
+                </div>
               </div>
               <RichTextArea
                 id="description"
