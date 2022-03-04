@@ -5,6 +5,7 @@ import {useQuery} from 'react-query';
 import { useEffect, useState } from 'react';
 import {RichTextArea} from "components/edit/eventDescription";
 import {EditSessions} from "components/edit/sessions";
+import {NextSeo} from 'next-seo';
 
 type formTypes = {
   title: string,
@@ -15,7 +16,7 @@ type formTypes = {
 }
 
 const Post = () => {
-  const {query} = useRouter();
+  const {query, asPath: url} = useRouter();
   const {
     eventHash, magic, ts,
   } = query;
@@ -42,26 +43,33 @@ const Post = () => {
   );
   useEffect(() => setInitValues({
     title: data?.title ?? '',
-    // proposerName: data?.proposerName ?? '',
     description: data?.description ?? '',
     location: data?.location ?? ''
   }), [data]);
   return (
+    <>
+      <NextSeo
+        title="Edit Convo"
+        openGraph={{
+          url: `https://convo.kernel.community${url}`,
+          title: `Edit Convo`,
+          description: 'A home for conversations taking place in the Kernel network',
+          images: [
+            {
+              url: 'https://confab-frontend.vercel.app/images/banner.jpg',
+              alt: 'KERNEL squares and circles',
+              type: 'image/jpeg',
+            },
+          ],
+          site_name: 'KERNEL Convo',
+        }}
+      />
     <Main className='
       container
       mx-auto
     '>
       <Formik
        initialValues={initValues}
-      //  validationSchema={Yup.object({
-      //    firstName: Yup.string()
-      //      .max(15, 'Must be 15 characters or less')
-      //      .required('Required'),
-      //    lastName: Yup.string()
-      //      .max(20, 'Must be 20 characters or less')
-      //      .required('Required'),
-      //    email: Yup.string().email('Invalid email address').required('Required'),
-      //  })}
        onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
         try {
@@ -102,7 +110,10 @@ const Post = () => {
                 xl:text-5xl
                 lg:text-4xl
                 text-3xl
-                text-primary
+              text-primary
+              ring-gray-300 border-gray-300
+              focus:border-primary focus:ring-primary
+              rounded-lg
               "
               {...formik.getFieldProps('title')}
             />
@@ -113,25 +124,30 @@ const Post = () => {
               <span>
                 {data?.proposerName && data?.proposerName}
               </span>
-            {/* <input
-              className="font-secondary sm:text-xl text-lg"
-              id="proposerName"
-              type="text"
-              {...formik.getFieldProps('proposerName')}
-            /> */}
             </div>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 mt-24 gap-12">
             <div className='col-span-2'>
-            <div>
-              <label htmlFor="location">Location</label>
-              <input type="text" id="location" {...formik.getFieldProps('location')} />
-            </div>
-            <RichTextArea
-              id="description"
-              {...formik.getFieldProps('description')}
-              handleChange={formik.handleChange('descriptionHtml')}
-            />
+              <div className='pb-2'>
+                <label htmlFor="location" className='mr-2 font-secondary text-gray-800 uppercase text-base'>
+                  Location
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  {...formik.getFieldProps('location')}
+                  className={`
+                    ring-gray-300 border-gray-300
+                    focus:border-primary focus:ring-primary
+                    rounded-lg
+                  `}
+                />
+              </div>
+              <RichTextArea
+                id="description"
+                {...formik.getFieldProps('description')}
+                handleChange={formik.handleChange('descriptionHtml')}
+              />
             </div>
             <div>
               {data?.sessions && <EditSessions sessions={data?.sessions} />}
@@ -182,6 +198,7 @@ const Post = () => {
      }
      </Formik>
     </Main>
+  </>
   );
 };
 
