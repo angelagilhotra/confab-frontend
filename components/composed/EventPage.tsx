@@ -65,7 +65,7 @@ const EventPage = ({
           {event.sessions &&
               <RsvpSection
                 sessions={event.sessions!}
-                totalUniqueRSVPs={event.totalUniqueRSVPs}
+                totalUniqueRSVPs={event.totalUniqueRSVPs!}
               />
           }
         </div>
