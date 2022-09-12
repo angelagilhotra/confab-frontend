@@ -43,7 +43,7 @@ export type ClientEvent = {
   sessionCount?: number,
   location?:string,
   sessions?: Session[],
-  totalUniqueRSVPs: number
+  totalUniqueRSVPs?: number
 }
 
 export type ServerEvent = {
