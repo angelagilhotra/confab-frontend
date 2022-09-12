@@ -42,7 +42,8 @@ export type ClientEvent = {
   proposerName?: string,
   sessionCount?: number,
   location?:string,
-  sessions?: Session[]
+  sessions?: Session[],
+  totalUniqueRSVPs: number
 }
 
 export type ServerEvent = {

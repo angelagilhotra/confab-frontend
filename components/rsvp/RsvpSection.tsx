@@ -97,13 +97,16 @@ const Session = ({
 
 const SessionsWrapper = ({
   sessions,
+  totalUniqueRSVPs
 }: {
   sessions: ClientSession[]
+  totalUniqueRSVPs: number
 }) => {
   const [toRsvp, setToRsvp] = useState<(number | undefined)[]>(sessions.map((s) => s.id));
   const [loading, setLoading] = useState<boolean>(false);
   const [done, setDone] = useState(false);
   const [rsvpEmail, setRsvpEmail] = useState<string|undefined>(undefined);
+  const [rsvpName, setRsvpName] = useState<string|undefined>(undefined);
   const [sortedSessions, setSortedSessions]=useState<ClientSession[]>(sessions);
   const [atleastOne, setAtleastOne] = useState<boolean>(true);
   useEffect(() => {
@@ -125,9 +128,8 @@ const SessionsWrapper = ({
   }, [sessions]);
 
 
-  const handleRsvpEmail = (e: any) => {
-    setRsvpEmail(e.target.value);
-  };
+  const handleRsvpEmail = (e: any) => setRsvpEmail(e.target.value)
+  const handleRsvpName = (e: any) => setRsvpName(e.target.value)
 
   const handleSessionSelect = (id: number, checked: boolean) => {
     switch (checked) {
@@ -144,9 +146,15 @@ const SessionsWrapper = ({
   const handleSubmit = async () => {
     setLoading(true);
     (await (await fetch('/api/rsvp', {
-      body: JSON.stringify({rsvp: {email: rsvpEmail, events: toRsvp}}),
+      body: JSON.stringify({
+        rsvp: {
+          name: rsvpName,
+          email: rsvpEmail,
+          events: toRsvp
+        }
+      }),
       method: 'POST',
-      headers: {'Content-type': 'application/json'},
+      headers: { 'Content-type': 'application/json' },
     })).json()).data;
     setLoading(false);
     setDone(true);
@@ -195,11 +203,19 @@ const SessionsWrapper = ({
           </FieldLabel>
         ):
          (
-           <div>
-             <Text
+           <div className='flex flex-col gap-2'>
+            <span className="text-sm font-primary lowercase font-light italic">
+            {totalUniqueRSVPs > 5 ? `Join ${totalUniqueRSVPs} others in attending the event` : `Be amongst the first few to RSVP!`}
+            </span>
+            <Text
                name="email"
                placeholder='email'
                handleChange={handleRsvpEmail}
+             ></Text>
+             <Text
+               name="name"
+               placeholder='name'
+               handleChange={handleRsvpName}
              ></Text>
              <Button
                handleClick={handleSubmit}
@@ -220,8 +236,10 @@ const SessionsWrapper = ({
 
 const RsvpSection = ({
   sessions,
+  totalUniqueRSVPs
 }: {
   sessions: ClientSession[],
+  totalUniqueRSVPs: number
 }) => {
   return (
     <div
@@ -229,6 +247,7 @@ const RsvpSection = ({
     >
       <SessionsWrapper
         sessions={sessions}
+        totalUniqueRSVPs={totalUniqueRSVPs}
       />
     </div>
   );
